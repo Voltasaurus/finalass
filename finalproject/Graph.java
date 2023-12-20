@@ -33,11 +33,11 @@ public class Graph {
     // TODO level 2: return a list of all edges in the graph
 	public ArrayList<Edge> getAllEdges() {
         ArrayList<Edge> edges = new ArrayList<>();
-        	for (int i = 0; i < graphSize; i++) {
-                edges.addAll(adjList[i]);
-            }
-        	return edges;
+        for (int i = 0; i < graphSize; i++) {
+            edges.addAll(adjList[i]);
         }
+        	return edges;
+    }
   
 	// TODO level 2: return list of tiles adjacent to t
 	public ArrayList<Tile> getNeighbors(Tile t) {

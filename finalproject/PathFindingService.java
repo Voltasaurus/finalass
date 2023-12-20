@@ -19,15 +19,15 @@ public abstract class PathFindingService {
 
     private void initSingleSource(Tile s) {
     	for (Tile t : g.vertices) {
-    		t.distanceCost = Integer.MAX_VALUE;
+    		t.costEstimate = Double.MAX_VALUE;
     		t.predecessor = null;
     	}
-    	s.distanceCost = 0;
+    	s.costEstimate = 0;
     }
 
     private void relax(Tile u, Tile v, double w) {
-    	if (v.distanceCost > u.distanceCost + w) {
-    		v.distanceCost = u.distanceCost + w;
+    	if (v.costEstimate > u.costEstimate + w) {
+    		v.costEstimate = u.costEstimate + w;
     		v.predecessor = u;
     	}
     }
@@ -38,7 +38,7 @@ public abstract class PathFindingService {
     	while (q.size > 0) {
     		Tile u = q.removeMin();
     		for (Tile v : u.neighbors) {
-    			relax(u, v, v.distanceCost);
+    			relax(u, v, v.costEstimate);
     		}
     	}
     }
@@ -51,36 +51,29 @@ public abstract class PathFindingService {
     
     //TODO level 5: Implement basic dijkstra's algorithm to path find to a known destination
     public ArrayList<Tile> findPath(Tile start, Tile end) {
-    	return null;
+        ArrayList<Tile> path = new ArrayList<Tile>();
+		dijkstra(g.vertices, start);
+		Tile current = end;
+		while (current != start) {
+			path.add(current);
+			current = current.predecessor;
+		}
+		return path;
     }
 
     //TODO level 5: Implement basic dijkstra's algorithm to path find to the final destination passing through given waypoints
     public ArrayList<Tile> findPath(Tile start, LinkedList<Tile> waypoints) {
-    	return null;
+    			ArrayList<Tile> path = new ArrayList<Tile>();
+		Tile current = start;
+		for (Tile t : waypoints) {
+			ArrayList<Tile> subPath = findPath(current, t);
+			path.addAll(subPath);
+			current = t;
+		}
+		ArrayList<Tile> subPath = findPath(current);
+		path.addAll(subPath);
+		return path;
     }
 
-    private ArrayList<Tile> reconstructPath(HashMap<Tile, Tile> predecessor, Tile start, Tile end) {
-        ArrayList<Tile> path = new ArrayList<>();
-        Tile current = end;
-
-        while (current != null && current != start) {
-            path.add(current);
-            current = predecessor.get(current);
-        }
-
-        if (current == start) {
-            path.add(start);
-            // Reverse the path to get the correct order
-            ArrayList<Tile> reversedPath = new ArrayList<>();
-            for (int i = path.size() - 1; i >= 0; i--) {
-                reversedPath.add(path.get(i));
-            }
-            return reversedPath;
-        } else {
-            // No path found
-            return new ArrayList<>();
-        }
-    }
-        
 }
 
