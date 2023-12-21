@@ -46,7 +46,6 @@ public abstract class PathFindingService {
 				relax(u, v, q);
 			}
 		}
-
 		ArrayList<Tile> path = new ArrayList<Tile>();
 		Tile curr = null;
 		for (Tile t : g.vertices) {
@@ -55,7 +54,6 @@ public abstract class PathFindingService {
 				break;
 			}
 		}
-
 		while (curr != startNode) {
 			path.addFirst(curr);
 			curr = curr.predecessor;
@@ -80,6 +78,7 @@ public abstract class PathFindingService {
 			path.addFirst(curr);
 			curr = curr.predecessor;
 		}
+		path.addFirst(start);
 		return path;
     }
 
@@ -89,17 +88,19 @@ public abstract class PathFindingService {
 			return findPath(start);
 		}
 		ArrayList<Tile> path = new ArrayList<Tile>();
-		System.out.println(start);
 		Tile tempStart = start;
+		Tile oldEnd = null;
 		for (Tile t : waypoints) {
-			System.out.println(tempStart);
-			ArrayList<Tile> temp = findPath(tempStart, t);
+			ArrayList<Tile> temp = findPath(start, t);
+			if (oldEnd != null) {
+				temp.removeFirst();
+			}
 			path.addAll(temp);
-			System.out.println(tempStart);
-			tempStart = t;
+			start = t;
+			oldEnd = temp.get(temp.size() - 1);
 		}
-		System.out.println(start);
-		System.out.println(tempStart);
+		path.removeLast();
+		path.addAll(findPath(start));
 		return path;
 	}
 }
