@@ -21,15 +21,25 @@ public class TilePriorityQ {
 	public void add(Tile t) {
 		size++;
 		heap[size] = t;
-		upHeap(size);
-	}
-	private void upHeap(int s) {
-		int i = s;
+		int i = size;
 		while (i > 1 && heap[i].costEstimate < heap[i/2].costEstimate) {
 			Tile temp = heap[i];
 			heap[i] = heap[i/2];
 			heap[i/2] = temp;
 			i = i/2;
+		}
+	}
+	private void upHeap(int s, int m) {
+		int i = m;
+		while (i > s) {
+			int j = i/2;
+			if (heap[i].costEstimate >= heap[j].costEstimate) {
+				break;
+			}
+			Tile temp = heap[i];
+			heap[i] = heap[j];
+			heap[j] = temp;
+			i = j;
 		}
 	}
 
@@ -63,14 +73,15 @@ public class TilePriorityQ {
 	public void updateKeys(Tile t, Tile newPred, double newEstimate) {
 		int i = 1;
 		while (i <= size) {
-			if (heap[i] == t) {
+			if (heap[i].equals(t)) {
 				heap[i].predecessor = newPred;
 				heap[i].costEstimate = newEstimate;
+				upHeap(1, i);
+				downHeap(i, size);
 				break;
 			}
 			i++;
 		}
-		downHeap(i, size);
 	}
 
 }
