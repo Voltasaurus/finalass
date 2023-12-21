@@ -88,7 +88,6 @@ public abstract class PathFindingService {
 			return findPath(start);
 		}
 		ArrayList<Tile> path = new ArrayList<Tile>();
-		Tile tempStart = start;
 		Tile oldEnd = null;
 		for (Tile t : waypoints) {
 			ArrayList<Tile> temp = findPath(start, t);
